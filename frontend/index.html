@@ -1,0 +1,102 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>BrightPath</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="keywords" content="" />
+    <meta name="description" content="" />
+
+    <!-- Favicon -->
+    <link href="/img/favicon.png" rel="icon" />
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Heebo:wght@400;500;600&family=Nunito:wght@600;700;800&display=swap" rel="stylesheet" />
+
+    <!-- External Libraries -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.10.0/css/all.min.css" rel="stylesheet" />
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.4.1/font/bootstrap-icons.css" rel="stylesheet" />
+
+    <!-- Your Local Lib CSS Files -->
+    <link href="/src/assets/lib/animate/animate.min.css" rel="stylesheet" />
+    <link href="/src/assets/lib/owlcarousel/assets/owl.carousel.min.css" rel="stylesheet" />
+
+    <!-- Your Local Bootstrap & Custom CSS -->
+    <link href="/src/assets/scss/bootstrap.min.css" rel="stylesheet" />
+    <link href="/src/assets/css/style.css" rel="stylesheet" />
+
+    <!-- Optional Font Awesome 6 -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+  </head>
+  <body>
+    <div id="root"></div>
+    <!-- React mounts here -->
+
+    <!-- JS Libraries (if needed) -->
+    <script src="/src/assets/js/bootstrap.bundle.min.js"></script>
+
+    <script type="module" src="/src/main.jsx"></script>
+
+
+
+    <!-- Back to Top button HTML can stay in JSX -->
+<script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/js/bootstrap.bundle.min.js"></script>
+<script src="/src/assets/lib/wow/wow.min.js"></script>
+<script src="/src/assets/lib/easing/easing.min.js"></script>
+<script src="/src/assets/lib/waypoints/waypoints.min.js"></script>
+<script src="/src/assets/lib/owlcarousel/owl.carousel.min.js"></script>
+<script src="/src/assets/lib/owlcarousel/assets/owl.carousel.min.css"></script>
+<script src="/src/assets/lib/owlcarousel/assets/owl.carousel.css"></script>
+<script src="/src/assets/js/main.js"></script>
+
+
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+  const accordionHeads = document.querySelectorAll('.accordion-head');
+
+  accordionHeads.forEach(head => {
+    head.addEventListener('click', function () {
+      const parent = document.querySelector('.accordions');
+
+      parent.classList.remove('is-first-expanded');
+
+      const allHeads = document.querySelectorAll('.accordion-head');
+      const allBodies = document.querySelectorAll('.accordion-body');
+
+      const thisBody = this.nextElementSibling;
+      const isOpen = this.classList.contains('is-open');
+
+      allHeads.forEach(h => {
+        h.classList.remove('is-open');
+        h.querySelector('.icon').style.transform = 'rotate(0deg)';
+      });
+
+      allBodies.forEach(b => {
+        b.style.maxHeight = null;
+      });
+
+      if (!isOpen) {
+        this.classList.add('is-open');
+        this.querySelector('.icon').style.transform = 'rotate(90deg)';
+        thisBody.style.maxHeight = thisBody.scrollHeight + 'px';
+      }
+    });
+  });
+
+  const firstAccordion = document.querySelector('.is-first-expanded .accordion:first-child');
+  if (firstAccordion) {
+    const firstHead = firstAccordion.querySelector('.accordion-head');
+    const firstBody = firstAccordion.querySelector('.accordion-body');
+
+    firstHead.classList.add('is-open');
+    firstHead.querySelector('.icon').style.transform = 'rotate(90deg)';
+    firstBody.style.maxHeight = firstBody.scrollHeight + 'px';
+  }
+});
+</script>
+
+  </body>
+</html>
