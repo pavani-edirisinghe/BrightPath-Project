@@ -19,13 +19,13 @@
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.10.0/css/all.min.css" rel="stylesheet" />
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.4.1/font/bootstrap-icons.css" rel="stylesheet" />
 
-    <!-- Your Local Lib CSS Files -->
-    <link href="/src/assets/lib/animate/animate.min.css" rel="stylesheet" />
-    <link href="/src/assets/lib/owlcarousel/assets/owl.carousel.min.css" rel="stylesheet" />
+    <!-- Local Lib CSS -->
+    <link href="/lib/animate.min.css" rel="stylesheet" />
+    <link href="/lib/owl.carousel.min.css" rel="stylesheet" />
 
-    <!-- Your Local Bootstrap & Custom CSS -->
-    <link href="/src/assets/scss/bootstrap.min.css" rel="stylesheet" />
-    <link href="/src/assets/css/style.css" rel="stylesheet" />
+    <!-- Local Bootstrap & Custom CSS -->
+    <link href="/lib/bootstrap.min.css" rel="stylesheet" />
+    <link href="/css/style.css" rel="stylesheet" />
 
     <!-- Optional Font Awesome 6 -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
@@ -34,69 +34,63 @@
     <div id="root"></div>
     <!-- React mounts here -->
 
-
-
+    <!-- Main React Entry -->
     <script type="module" src="/src/main.jsx"></script>
 
+    <!-- JS Libraries -->
+    <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="/lib/wow.min.js"></script>
+    <script src="/lib/easing.min.js"></script>
+    <script src="/lib/waypoints.min.js"></script>
+    <script src="/lib/owl.carousel.min.js"></script>
 
+    <!-- Custom JS -->
+    <script src="/js/main.js"></script>
 
-    <!-- Back to Top button HTML can stay in JSX -->
-<script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/js/bootstrap.bundle.min.js"></script>
-<script src="/src/assets/lib/wow/wow.min.js"></script>
-<script src="/src/assets/lib/easing/easing.min.js"></script>
-<script src="/src/assets/lib/waypoints/waypoints.min.js"></script>
-<script src="/src/assets/lib/owlcarousel/owl.carousel.min.js"></script>
-<link rel="stylesheet" href="/src/assets/lib/owlcarousel/assets/owl.carousel.min.css">
-<link rel="stylesheet" href="/src/assets/lib/owlcarousel/assets/owl.carousel.css">
+    <!-- Accordion Script -->
+    <script>
+      document.addEventListener('DOMContentLoaded', function () {
+        const accordionHeads = document.querySelectorAll('.accordion-head');
 
-<script src="/src/assets/js/main.js"></script>
+        accordionHeads.forEach(head => {
+          head.addEventListener('click', function () {
+            const parent = document.querySelector('.accordions');
+            parent.classList.remove('is-first-expanded');
 
+            const allHeads = document.querySelectorAll('.accordion-head');
+            const allBodies = document.querySelectorAll('.accordion-body');
 
-<script>
-document.addEventListener('DOMContentLoaded', function () {
-  const accordionHeads = document.querySelectorAll('.accordion-head');
+            const thisBody = this.nextElementSibling;
+            const isOpen = this.classList.contains('is-open');
 
-  accordionHeads.forEach(head => {
-    head.addEventListener('click', function () {
-      const parent = document.querySelector('.accordions');
+            allHeads.forEach(h => {
+              h.classList.remove('is-open');
+              h.querySelector('.icon').style.transform = 'rotate(0deg)';
+            });
 
-      parent.classList.remove('is-first-expanded');
+            allBodies.forEach(b => {
+              b.style.maxHeight = null;
+            });
 
-      const allHeads = document.querySelectorAll('.accordion-head');
-      const allBodies = document.querySelectorAll('.accordion-body');
+            if (!isOpen) {
+              this.classList.add('is-open');
+              this.querySelector('.icon').style.transform = 'rotate(90deg)';
+              thisBody.style.maxHeight = thisBody.scrollHeight + 'px';
+            }
+          });
+        });
 
-      const thisBody = this.nextElementSibling;
-      const isOpen = this.classList.contains('is-open');
+        const firstAccordion = document.querySelector('.is-first-expanded .accordion:first-child');
+        if (firstAccordion) {
+          const firstHead = firstAccordion.querySelector('.accordion-head');
+          const firstBody = firstAccordion.querySelector('.accordion-body');
 
-      allHeads.forEach(h => {
-        h.classList.remove('is-open');
-        h.querySelector('.icon').style.transform = 'rotate(0deg)';
+          firstHead.classList.add('is-open');
+          firstHead.querySelector('.icon').style.transform = 'rotate(90deg)';
+          firstBody.style.maxHeight = firstBody.scrollHeight + 'px';
+        }
       });
-
-      allBodies.forEach(b => {
-        b.style.maxHeight = null;
-      });
-
-      if (!isOpen) {
-        this.classList.add('is-open');
-        this.querySelector('.icon').style.transform = 'rotate(90deg)';
-        thisBody.style.maxHeight = thisBody.scrollHeight + 'px';
-      }
-    });
-  });
-
-  const firstAccordion = document.querySelector('.is-first-expanded .accordion:first-child');
-  if (firstAccordion) {
-    const firstHead = firstAccordion.querySelector('.accordion-head');
-    const firstBody = firstAccordion.querySelector('.accordion-body');
-
-    firstHead.classList.add('is-open');
-    firstHead.querySelector('.icon').style.transform = 'rotate(90deg)';
-    firstBody.style.maxHeight = firstBody.scrollHeight + 'px';
-  }
-});
-</script>
-
+    </script>
   </body>
 </html>
