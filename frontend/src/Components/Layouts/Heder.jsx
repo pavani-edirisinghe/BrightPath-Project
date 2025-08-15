@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { NavLink, useNavigate } from 'react-router-dom';
 import { useUser } from '../../context/UserContext';
 import '../../assets/css/style.css';
@@ -6,10 +6,20 @@ import '../../assets/css/style.css';
 function Header() {
   const { user, logout } = useUser();
   const navigate = useNavigate();
+  const [menuOpen, setMenuOpen] = useState(false); // state for mobile menu
 
   const handleLogout = () => {
     logout();
     navigate('/login');
+    setMenuOpen(false); // close menu after logout
+  };
+
+  const toggleMenu = () => {
+    setMenuOpen(!menuOpen);
+  };
+
+  const closeMenu = () => {
+    setMenuOpen(false);
   };
 
   return (
@@ -17,6 +27,7 @@ function Header() {
       <NavLink
         to="/"
         className="navbar-brand d-flex align-items-center px-4 px-lg-5"
+        onClick={closeMenu}
       >
         <h2 className="m-0 text-primary">
           <i className="fa fa-lightbulb me-3" />
@@ -27,83 +38,63 @@ function Header() {
       <button
         className="navbar-toggler me-4 text-white border-0"
         type="button"
-        data-bs-toggle="collapse"
-        data-bs-target="#navbarCollapse"
+        onClick={toggleMenu}
       >
         <i className="fas fa-bars" />
       </button>
 
-      <div className="collapse navbar-collapse" id="navbarCollapse">
+      <div className={`collapse navbar-collapse ${menuOpen ? 'show' : ''}`}>
         <div className="navbar-nav ms-auto p-4 p-lg-0">
-          <NavLink
-            to="/"
-            end
-            className={({ isActive }) =>
-              isActive ? 'nav-item nav-link active' : 'nav-item nav-link'
-            }
-          >
-            Home
-          </NavLink>
-          <NavLink
-            to="/about-us"
-            className={({ isActive }) =>
-              isActive ? 'nav-item nav-link active' : 'nav-item nav-link'
-            }
-          >
-            About
-          </NavLink>
-          <NavLink
-            to="/courses"
-            className={({ isActive }) =>
-              isActive ? 'nav-item nav-link active' : 'nav-item nav-link'
-            }
-          >
-            Courses
-          </NavLink>
-          <NavLink
-            to="/contact"
-            className={({ isActive }) =>
-              isActive ? 'nav-item nav-link active' : 'nav-item nav-link'
-            }
-          >
-            Contact Us
-          </NavLink>
-          
-          {/* Conditional rendering based on login status */}
+          {['/', '/about-us', '/courses', '/contact'].map((path, i) => {
+            const name = ['Home', 'About', 'Courses', 'Contact Us'][i];
+            return (
+              <NavLink
+                key={path}
+                to={path}
+                end={path === '/'}
+                className={({ isActive }) =>
+                  isActive ? 'nav-item nav-link active' : 'nav-item nav-link'
+                }
+                onClick={closeMenu} // close menu when link is clicked
+              >
+                {name}
+              </NavLink>
+            );
+          })}
+
           {user ? (
             <div className="nav-item dropdown">
-              <a 
-                href="#" 
-                className="nav-link dropdown-toggle d-flex align-items-center" 
-                id="userDropdown" 
-                role="button" 
-                data-bs-toggle="dropdown" 
+              <a
+                href="#"
+                className="nav-link dropdown-toggle d-flex align-items-center"
+                id="userDropdown"
+                role="button"
+                data-bs-toggle="dropdown"
                 aria-expanded="false"
               >
                 {user.profileImage ? (
-  <img
-    src={
-      user.profileImage.startsWith('http')
-        ? user.profileImage
-        : `https://brightpathimages.blob.core.windows.net/profile-images/${user.profileImage}`
-    }
-    alt="Profile"
-    className="rounded-circle me-2"
-    style={{ width: '30px', height: '30px', objectFit: 'cover' }}
-    onError={(e) => {
-      e.target.onerror = null;
-      e.target.src = '/img/default-profile.png';
-    }}
-  />
-) : (
-  <i className="fas fa-user-circle me-2"></i>
-)}
-
+                  <img
+                    src={
+                      user.profileImage.startsWith('http')
+                        ? user.profileImage
+                        : `https://brightpathimages.blob.core.windows.net/profile-images/${user.profileImage}`
+                    }
+                    alt="Profile"
+                    className="rounded-circle me-2"
+                    style={{ width: '30px', height: '30px', objectFit: 'cover' }}
+                    onError={(e) => {
+                      e.target.onerror = null;
+                      e.target.src = '/img/default-profile.png';
+                    }}
+                  />
+                ) : (
+                  <i className="fas fa-user-circle me-2"></i>
+                )}
                 <span className="d-none d-md-inline">{user.username}</span>
               </a>
               <ul className="dropdown-menu dropdown-menu-end" aria-labelledby="userDropdown">
                 <li>
-                  <NavLink to="/dashboard" className="dropdown-item">
+                  <NavLink to="/dashboard" className="dropdown-item" onClick={closeMenu}>
                     Dashboard
                   </NavLink>
                 </li>
@@ -123,29 +114,21 @@ function Header() {
               className={({ isActive }) =>
                 isActive ? 'nav-item nav-link active' : 'nav-item nav-link'
               }
+              onClick={closeMenu} // close menu when login clicked
             >
               Login
             </NavLink>
           )}
-          
 
           <div className="d-flex align-items-center ms-lg-3">
-            <a
-              className="btn btn-sm-square btn-light text-primary me-2"
-              href="#"
-              style={{ height: 30 }}
-            >
+            <a className="btn btn-sm-square btn-light text-primary me-2" href="#" style={{ height: 30 }}>
               <i className="fab fa-facebook-f" style={{ fontSize: 16 }} />
             </a>
-            <a
-              className="btn btn-sm-square btn-light text-primary"
-              href="#"
-              style={{ height: 30 }}
-            >
+            <a className="btn btn-sm-square btn-light text-primary" href="#" style={{ height: 30 }}>
               <i className="fab fa-linkedin-in" style={{ fontSize: 16 }} />
             </a>
             <a href="contact.html" className="nav-item nav-link"></a>
-            <a href="contact.html" className="nav-item nav-link"></a>
+             <a href="contact.html" className="nav-item nav-link"></a>
           </div>
         </div>
       </div>
