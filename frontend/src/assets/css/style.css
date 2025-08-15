@@ -706,15 +706,7 @@ section.our-facts .video img {
 }
 
 
-.meetings-page {
-  background-image: url(../img/meetings-page-bg.jpg);
-  background-position: center center;
-  background-attachment: fixed;
-  background-repeat: no-repeat;
-  background-size: cover;
-  padding-top: 100px;
-  padding-bottom: 0px;
-}
+
 
 .grid {
   display: flex;
