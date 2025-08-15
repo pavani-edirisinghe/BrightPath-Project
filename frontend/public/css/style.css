@@ -321,7 +321,7 @@ body {
 @media (max-width: 768px) {
     /* Only push the text down on mobile */
     .owl-carousel-item .container > .row > .col-sm-10 {
-        margin-top: 100px; /* adjust as needed */
+        margin-top: 80px; /* adjust as needed */
     }
 }
 
