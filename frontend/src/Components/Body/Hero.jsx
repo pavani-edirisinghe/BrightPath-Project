@@ -19,7 +19,8 @@ const HeroSection = () => {
           autoplay={true}
           smartSpeed={1500}
           dots={false}
-          nav={true}
+          
+          nav={window.innerWidth > 767} 
           navText={[
             '<i class="bi bi-chevron-left"></i>',
             '<i class="bi bi-chevron-right"></i>'
