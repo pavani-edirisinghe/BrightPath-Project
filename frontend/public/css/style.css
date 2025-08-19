@@ -595,7 +595,7 @@ body {
     color: var(--light);
     font-weight: normal;
     border: 1px solid #FFFFFF;
-    border-radius: 35px;
+   
     transition: .3s;
 }
 
@@ -613,6 +613,7 @@ body {
     font-weight: normal;
     text-transform: capitalize;
     transition: .3s;
+    box-shadow: none;
 }
 
 .footer .btn.btn-link::before {
@@ -621,6 +622,7 @@ body {
     font-family: "Font Awesome 5 Free";
     font-weight: 900;
     margin-right: 10px;
+    box-shadow: none;
 }
 
 .footer .btn.btn-link:hover {
