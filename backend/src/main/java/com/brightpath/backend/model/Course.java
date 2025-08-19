@@ -27,6 +27,10 @@ public class Course {
     @Column(name = "image_url")
     private String imageUrl; // Full Azure Blob Storage URL for course image
 
+    @Column(name = "resourceUrl")
+    private String resourceUrl; // Full Azure Blob Storage URL for course PDF
+
+
     // Default constructor
     public Course() {}
 
@@ -46,6 +50,7 @@ public class Course {
         this.price = price;
         this.imageUrl = imageUrl;
     }
+
 
     // Getters and setters
     public Long getId() {
@@ -109,6 +114,15 @@ public class Course {
         return null;
     }
 
+    public String getResourceUrl() {
+        return resourceUrl;
+    }
+
+    public void setResourceUrl(String resourceUrl) {
+        this.resourceUrl = resourceUrl;
+    }
+
+
     @Override
     public String toString() {
         return "Course{" +
@@ -118,6 +132,7 @@ public class Course {
                 ", startDate=" + startDate +
                 ", price=" + price +
                 ", imageUrl=\'" + imageUrl + "\'" +
+                ", resourceUrl='" + resourceUrl + '\'' +
                 "}";
     }
 

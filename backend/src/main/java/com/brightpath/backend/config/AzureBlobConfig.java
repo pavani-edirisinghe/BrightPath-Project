@@ -28,6 +28,10 @@ public class AzureBlobConfig {
     @Value("${azure.storage.course-images-container-name}")
     private String courseImagesContainerName;
 
+    @Value("${azure.storage.course-resources-container-name}")
+    private String courseResourcesContainerName;
+
+
     @Bean
     public BlobServiceClient blobServiceClient() {
         try {
@@ -55,6 +59,11 @@ public class AzureBlobConfig {
     @Bean(name = "courseImagesContainerClient")
     public BlobContainerClient courseImagesContainerClient(BlobServiceClient blobServiceClient) {
         return createContainerClient(blobServiceClient, courseImagesContainerName, "course images");
+    }
+
+    @Bean(name = "courseResourcesContainerClient")
+    public BlobContainerClient courseResourcesContainerClient(BlobServiceClient blobServiceClient) {
+        return createContainerClient(blobServiceClient, courseResourcesContainerName, "course resources");
     }
 
     private BlobContainerClient createContainerClient(BlobServiceClient blobServiceClient,

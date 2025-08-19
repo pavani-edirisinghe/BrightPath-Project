@@ -3,6 +3,7 @@ package com.brightpath.backend.controller;
 import com.brightpath.backend.model.Course;
 import com.brightpath.backend.service.CourseService;
 import com.brightpath.backend.service.ImageStorageService;
+import com.brightpath.backend.service.ResourceStorageService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,6 +32,10 @@ public class CourseController {
     @Autowired
     private ImageStorageService imageStorageService;
 
+    @Autowired
+    private ResourceStorageService resourceStorageService;
+
+
     @GetMapping
     public ResponseEntity<List<Course>> getAllCourses() {
         List<Course> courses = courseService.getAllCourses();
@@ -43,7 +48,8 @@ public class CourseController {
             @RequestParam("description") String description,
             @RequestParam("startDate") String startDateStr,
             @RequestParam("price") Double price,
-            @RequestParam(value = "image", required = false) MultipartFile imageFile
+            @RequestParam(value = "image", required = false) MultipartFile imageFile,
+            @RequestParam(value = "file", required = false) MultipartFile pdfFile
     ) {
         logger.info("📩 Received course creation request:");
         logger.info("name: {}", name);
@@ -75,6 +81,12 @@ public class CourseController {
             // Parse date
             Date startDate = new SimpleDateFormat("yyyy-MM-dd").parse(startDateStr);
 
+            String resourceUrl = null;
+            if (pdfFile != null && !pdfFile.isEmpty()) {
+                resourceUrl = resourceStorageService.uploadResource(pdfFile);
+            }
+
+
             // Create course object
             Course course = new Course();
             course.setName(name);
@@ -82,6 +94,7 @@ public class CourseController {
             course.setStartDate(startDate);
             course.setPrice(price);
             course.setImageUrl(imageUrl);
+            course.setResourceUrl(resourceUrl);
 
             // Save course
             Course savedCourse = courseService.saveCourse(course);
@@ -289,4 +302,93 @@ public class CourseController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
         }
     }
+    @PutMapping("/{id}/resource")
+    public ResponseEntity<?> uploadCourseResource(
+            @PathVariable Long id,
+            @RequestParam("file") MultipartFile file) {
+
+        Map<String, Object> response = new HashMap<>();
+
+        try {
+            Optional<Course> courseOptional = courseService.findById(id);
+            if (!courseOptional.isPresent()) {
+                response.put("success", false);
+                response.put("message", "Course not found");
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
+            }
+
+            Course course = courseOptional.get();
+
+            // Delete old PDF if exists
+            if (course.getResourceUrl() != null && !course.getResourceUrl().isEmpty()) {
+                String oldFilename = resourceStorageService.extractFilenameFromUrl(course.getResourceUrl());
+                if (oldFilename != null) {
+                    resourceStorageService.deleteResource(oldFilename);
+                }
+            }
+
+            // Upload new PDF
+            String resourceUrl = resourceStorageService.uploadResource(file);
+
+            // Save URL to course
+            course.setResourceUrl(resourceUrl);
+            courseService.saveCourse(course);
+
+            response.put("success", true);
+            response.put("message", "Resource uploaded successfully");
+            response.put("resourceUrl", resourceUrl);
+
+            return ResponseEntity.ok(response);
+
+        } catch (IOException e) {
+            response.put("success", false);
+            response.put("message", "Failed to upload resource: " + e.getMessage());
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
+        } catch (Exception e) {
+            response.put("success", false);
+            response.put("message", "Internal server error: " + e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
+        }
+    }
+
+
+    @GetMapping("/{id}/resource")
+    public ResponseEntity<?> getCourseResource(@PathVariable Long id) {
+        Map<String, Object> response = new HashMap<>();
+        Optional<Course> courseOptional = courseService.findById(id);
+
+        if (!courseOptional.isPresent()) {
+            response.put("success", false);
+            response.put("message", "Course not found");
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
+        }
+
+        Course course = courseOptional.get();
+        response.put("success", true);
+        response.put("resourceUrl", course.getResourceUrl());
+        return ResponseEntity.ok(response);
+    }
+    @GetMapping("/{id}/download")
+    public ResponseEntity<byte[]> downloadResource(@PathVariable Long id) throws IOException {
+        Optional<Course> courseOptional = courseService.findById(id);
+        if (!courseOptional.isPresent()) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        }
+
+        Course course = courseOptional.get();
+        String resourceUrl = course.getResourceUrl();
+        if (resourceUrl == null || resourceUrl.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        }
+
+        byte[] pdfData = resourceStorageService.downloadResource(resourceUrl); // This now works
+
+        return ResponseEntity.ok()
+                .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + course.getName() + ".pdf\"")
+                .contentType(MediaType.APPLICATION_PDF)
+                .body(pdfData);
+    }
+
+
+
 }

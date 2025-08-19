@@ -41,6 +41,7 @@ public class CourseService {
         course.setStartDate(courseDetails.getStartDate());
         course.setPrice(courseDetails.getPrice());
         course.setImageUrl(courseDetails.getImageUrl());
+        course.setResourceUrl(courseDetails.getResourceUrl());
 
         return courseRepository.save(course);
     }
@@ -51,6 +52,23 @@ public class CourseService {
 
         courseRepository.delete(course);
     }
+
+    // Update PDF resource URL
+    public Course updateCourseResource(Long courseId, String resourceUrl) {
+        Course course = courseRepository.findById(courseId)
+                .orElseThrow(() -> new RuntimeException("Course not found"));
+        course.setResourceUrl(resourceUrl);
+        return courseRepository.save(course);
+    }
+
+    // Remove PDF resource URL
+    public Course removeCourseResource(Long courseId) {
+        Course course = courseRepository.findById(courseId)
+                .orElseThrow(() -> new RuntimeException("Course not found"));
+        course.setResourceUrl(null);
+        return courseRepository.save(course);
+    }
+
 
     public Course getCourseById(Long id) {
         return courseRepository.findById(id).orElse(null);

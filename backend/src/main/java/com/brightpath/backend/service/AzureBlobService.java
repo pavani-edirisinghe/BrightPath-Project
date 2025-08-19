@@ -15,12 +15,15 @@ public class AzureBlobService {
 
     private final BlobContainerClient profileImagesContainerClient;
     private final BlobContainerClient courseImagesContainerClient;
+    private final BlobContainerClient courseResourcesContainerClient;
 
     public AzureBlobService(
             @Qualifier("profileImagesContainerClient") BlobContainerClient profileImagesContainerClient,
-            @Qualifier("courseImagesContainerClient") BlobContainerClient courseImagesContainerClient) {
+            @Qualifier("courseImagesContainerClient") BlobContainerClient courseImagesContainerClient,
+            @Qualifier("courseResourcesContainerClient") BlobContainerClient courseResourcesContainerClient) {
         this.profileImagesContainerClient = profileImagesContainerClient;
         this.courseImagesContainerClient = courseImagesContainerClient;
+        this.courseResourcesContainerClient = courseResourcesContainerClient;
     }
 
     /**
@@ -63,4 +66,11 @@ public class AzureBlobService {
     public String generateCourseImageSasUrl(String blobName, int expiryMinutes) {
         return generateSasUrl(courseImagesContainerClient, blobName, expiryMinutes);
     }
+    /**
+     * Generate a SAS URL for a PDF in the course-resources container.
+     */
+    public String generateCourseResourceSasUrl(String blobName, int expiryMinutes) {
+        return generateSasUrl(courseResourcesContainerClient, blobName, expiryMinutes);
+    }
+
 }
