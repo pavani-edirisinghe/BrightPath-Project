@@ -10,6 +10,7 @@ const MyCourses = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
+  
   const BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
 
   const fetchMyCourses = async () => {
