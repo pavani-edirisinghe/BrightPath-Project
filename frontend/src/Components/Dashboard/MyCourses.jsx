@@ -1,6 +1,6 @@
-import React, { useEffect, useState } from "react";
-import { useUser } from "../../context/UserContext";
-import { useNavigate } from "react-router-dom";
+import React, { useEffect, useState } from 'react';
+import { useUser } from '../../context/UserContext';
+import { useNavigate } from 'react-router-dom';
 
 const MyCourses = () => {
   const { user } = useUser();
@@ -15,26 +15,15 @@ const MyCourses = () => {
   const fetchMyCourses = async () => {
     try {
       setLoading(true);
-      const res = await fetch(
-        `${BACKEND_URL}/api/enrollments/user/${user.id}/courses`
-      );
-
+      const token = localStorage.getItem('token');
+      const res = await fetch(`${BACKEND_URL}/api/enrollments/user/${user.id}/courses`, {
+        headers: token ? { 'Authorization': `Bearer ${token}` } : {}
+      });
       if (!res.ok) {
         throw new Error(`Failed to fetch courses: ${res.status}`);
       }
-
       const data = await res.json();
-
-      // If backend returns { courses: [...] }
-      if (Array.isArray(data.courses)) {
-        setMyCourses(data.courses);
-      }
-      // If backend directly returns an array [...]
-      else if (Array.isArray(data)) {
-        setMyCourses(data);
-      } else {
-        setMyCourses([]);
-      }
+      setMyCourses(data.courses || []);
     } catch (err) {
       console.error("Error fetching my courses:", err);
       setError(err.message);
@@ -48,29 +37,6 @@ const MyCourses = () => {
       fetchMyCourses();
     }
   }, [user?.id]);
-
-  // ✅ Function to download PDF from backend
-  const handleDownload = async (courseId, filename = "resource.pdf") => {
-    try {
-      const res = await fetch(
-        `${BACKEND_URL}/api/courses/${courseId}/download`
-      );
-
-      if (!res.ok) throw new Error("Failed to fetch resource");
-
-      const blob = await res.blob();
-      const link = document.createElement("a");
-      link.href = URL.createObjectURL(blob);
-      link.download = filename;
-      document.body.appendChild(link);
-      link.click();
-      link.remove();
-      URL.revokeObjectURL(link.href);
-    } catch (err) {
-      console.error("Download error:", err);
-      alert("Failed to download resource");
-    }
-  };
 
   if (loading) {
     return (
@@ -108,17 +74,23 @@ const MyCourses = () => {
           </div>
           <h3>You haven't enrolled in any courses yet</h3>
           <p>Browse available courses and start your learning journey today!</p>
-          <button className="browse-btn" onClick={() => navigate("/courses")}>
+          <button 
+            className="browse-btn"
+            onClick={() => navigate('/courses')}
+          >
             Browse Courses
           </button>
         </div>
       ) : (
         <div className="course-grid">
-          {myCourses.map((course) => (
-            <div className="course-card" key={course.id}>
+          {myCourses.map(course => (
+            <div className="course-card" key={course.id || Math.random()}>
               <div className="course-thumb">
                 {course.imageUrl ? (
-                  <img src={course.imageUrl} alt={course.name || "Course"} />
+                  <img 
+                    src={course.imageUrl} 
+                    alt={course.name || "Course"} 
+                  />
                 ) : (
                   <div className="course-placeholder">
                     <i className="fas fa-book"></i>
@@ -134,18 +106,13 @@ const MyCourses = () => {
                   <p>{course.description || "No description available"}</p>
                 </div>
                 <div className="course-actions">
-                  <button
-                    className="continue-btn"
+                  <button 
+                    className="continue-btn" 
                     onClick={() => navigate(`/course/${course.id}`)}
                   >
                     <i className="fas fa-play"></i> Continue
                   </button>
-                  <button
-                    className="resources-btn"
-                    onClick={() =>
-                      handleDownload(course.id, `${course.name}.pdf`)
-                    }
-                  >
+                  <button className="resources-btn">
                     <i className="fas fa-download"></i> Resources
                   </button>
                 </div>
