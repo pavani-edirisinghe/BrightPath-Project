@@ -135,6 +135,7 @@ export const CourseProvider = ({ children }) => {
   );
 };
 
+
 // Create custom hook
 export const useCourses = () => {
   const context = useContext(CourseContext);
