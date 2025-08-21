@@ -1740,3 +1740,42 @@ form label {
 .pagination-link i {
   line-height: 40px;
 }
+
+section.course-video .video1 {
+  text-align: center;
+  background-image: url('/img/course-intro.jpg');
+  background-repeat: no-repeat;
+  background-position: center center;
+  background-size: cover;
+  border-radius: 20px;
+  height: 350px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-right: 10px; /* small gap between two videos */
+}
+
+section.course-video .video1 img {
+  max-width: 80px;
+  cursor: pointer;
+}
+
+
+section.course-video .video2 {
+  text-align: center;
+  background-image: url('/img/course-intro2.jpg');
+  background-repeat: no-repeat;
+  background-position: center center;
+  background-size: cover;
+  border-radius: 20px;
+  height: 350px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-right: 10px; /* small gap between two videos */
+}
+
+section.course-video .video2 img {
+  max-width: 80px;
+  cursor: pointer;
+}

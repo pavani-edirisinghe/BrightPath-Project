@@ -5,6 +5,7 @@ import { useEnrollment } from '../../context/EnrollmentContext'; // Import useEn
 import { useUser } from '../../context/UserContext'; // Import useUser
 import CourseHeader from '../CourseDetail/CourseHeader.jsx';
 
+
  const BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
  
 const CourseDetail = () => {
@@ -126,7 +127,7 @@ const handleDownload = async (courseId, filename = "resource.pdf") => {
                         can boost your tech career.
                       </p>
 
-                      {/* ✅ PDF Resource Section */}
+                     
                       <div className="resources my-3">
                         <button
                           className="btn btn-outline-primary"
@@ -136,6 +137,44 @@ const handleDownload = async (courseId, filename = "resource.pdf") => {
                         </button>
                       </div>
 
+
+                      <hr className="my-4" style={{ borderTop: "2px dashed #ccc", marginTop: "100px", marginBottom: "30px"}} />
+
+                      <section className="course-video my-4">
+                        <div className="row">
+                          <div className="col-lg-12 mb-3">
+        <h4 style={{ textAlign: 'left', marginLeft: '0' }}>
+          Course Introduction Videos
+        </h4>
+      </div>
+
+      {/* First video */}
+      <div className="col-md-6 d-flex justify-content-start">
+        <div className="video1 w-100">
+          <a
+            href="https://www.youtube.com/watch?v=HndV87XpkWg"
+            target="_blank"
+            rel="noreferrer"
+          >
+            <img src="/img/play-icon.png" alt="Video 1" />
+          </a>
+        </div>
+      </div>
+
+      {/* Second video */}
+      <div className="col-md-6 d-flex justify-content-start">
+        <div className="video2 w-100">
+          <a
+            href="https://www.youtube.com/watch?v=dQw4w9WgXcQ"
+            target="_blank"
+            rel="noreferrer"
+          >
+            <img src="/img/play-icon.png" alt="Video 2" />
+          </a>
+        </div>
+      </div>
+    </div>
+  </section>
                       {/* Divider line BELOW */}
                       <hr className="my-4" style={{ borderTop: "2px solid #ddd" }} />
 
