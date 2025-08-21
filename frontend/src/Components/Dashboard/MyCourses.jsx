@@ -10,6 +10,7 @@ const MyCourses = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
+  
   const BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
 
   const fetchMyCourses = async () => {
@@ -37,6 +38,33 @@ const MyCourses = () => {
       fetchMyCourses();
     }
   }, [user?.id]);
+
+  // ✅ Function to download PDF from backend
+const handleDownload = async (courseId, filename = "resource.pdf") => {
+  try {
+    const token = localStorage.getItem('token');
+    const res = await fetch(`${BACKEND_URL}/api/courses/${courseId}/download`, {
+      headers: token ? { 'Authorization': `Bearer ${token}` } : {}
+    });
+
+    if (!res.ok) throw new Error("Failed to fetch resource");
+
+    const blob = await res.blob();
+    const link = document.createElement("a");
+    link.href = URL.createObjectURL(blob);
+    link.download = filename;
+    document.body.appendChild(link);
+    link.click();
+    link.remove();
+    URL.revokeObjectURL(link.href);
+
+  } catch (err) {
+    console.error("Download error:", err);
+    alert("Failed to download resource");
+  }
+};
+
+
 
   if (loading) {
     return (
@@ -84,7 +112,7 @@ const MyCourses = () => {
       ) : (
         <div className="course-grid">
           {myCourses.map(course => (
-            <div className="course-card" key={course.id || Math.random()}>
+            <div className="course-card" key={course.id}>
               <div className="course-thumb">
                 {course.imageUrl ? (
                   <img 
@@ -112,9 +140,14 @@ const MyCourses = () => {
                   >
                     <i className="fas fa-play"></i> Continue
                   </button>
-                  <button className="resources-btn">
-                    <i className="fas fa-download"></i> Resources
-                  </button>
+                 <button
+  className="resources-btn"
+  onClick={() => handleDownload(course.id, `${course.name}.pdf`)}
+>
+  <i className="fas fa-download"></i> Resources
+</button>
+
+
                 </div>
               </div>
             </div>
