@@ -5,6 +5,8 @@ import { useEnrollment } from '../../context/EnrollmentContext'; // Import useEn
 import { useUser } from '../../context/UserContext'; // Import useUser
 import CourseHeader from '../CourseDetail/CourseHeader.jsx';
 
+ const BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
+ 
 const CourseDetail = () => {
   const { courseId } = useParams();
   const { courses, loading, error } = useCourses();
@@ -36,6 +38,32 @@ const CourseDetail = () => {
       setEnrollingCourseId(null);
     }
   };
+
+  // ✅ Function to download PDF from backend
+const handleDownload = async (courseId, filename = "resource.pdf") => {
+  try {
+    const token = localStorage.getItem('token');
+    const res = await fetch(`${BACKEND_URL}/api/courses/${courseId}/download`, {
+      headers: token ? { 'Authorization': `Bearer ${token}` } : {}
+    });
+
+    if (!res.ok) throw new Error("Failed to fetch resource");
+
+    const blob = await res.blob();
+    const link = document.createElement("a");
+    link.href = URL.createObjectURL(blob);
+    link.download = filename;
+    document.body.appendChild(link);
+    link.click();
+    link.remove();
+    URL.revokeObjectURL(link.href);
+
+  } catch (err) {
+    console.error("Download error:", err);
+    alert("Failed to download resource");
+  }
+};
+
 
   if (loading) return <p>Loading course details...</p>;
   if (error) return <p>Error loading course: {error}</p>;
@@ -97,6 +125,20 @@ const CourseDetail = () => {
                         you. Complete real-world projects and earn a certificate that
                         can boost your tech career.
                       </p>
+
+                      {/* ✅ PDF Resource Section */}
+                      <div className="resources my-3">
+                        <button
+                          className="btn btn-outline-primary"
+                          onClick={() => handleDownload(course.id, `${course.name}.pdf`)}
+                        >
+                          <i className="fas fa-download me-2"></i> Download Resources
+                        </button>
+                      </div>
+
+                      {/* Divider line BELOW */}
+                      <hr className="my-4" style={{ borderTop: "2px solid #ddd" }} />
+
                       <div className="row">
                         <div className="col-lg-4">
                           <div className="hours">
